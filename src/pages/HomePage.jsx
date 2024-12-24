@@ -10,6 +10,7 @@ const HomePage = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const { auth } = useContext(AuthContext); // Access the auth context
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Redirect to login if user is not authenticated
   // useEffect(() => {
@@ -27,7 +28,7 @@ const HomePage = () => {
           navigate("/login");
           return;
         }
-        await axios.get("http://localhost:5000/users/me", {
+        await axios.get(`${apiUrl}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (error) {
@@ -142,6 +143,11 @@ const HomePage = () => {
           <Link to="/all-plant-details">
             <button className="bg-gradient-to-r from-cyan-500 to-indigo-800 text-white rounded-xl p-4 shadow-lg hover:scale-105 active:scale-90 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-indigo-300">
               All Plant Details
+            </button>
+          </Link>
+          <Link to="/dashboard">
+            <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl p-4 shadow-lg hover:scale-105 active:scale-90 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-red-300">
+              User Management
             </button>
           </Link>
         </div>
