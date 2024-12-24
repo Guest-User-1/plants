@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "react-toastify/dist/ReactToastify.css";
 
 const ZoneWisePlantDetails = () => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const [zoneData, setZoneData] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedZone, setSelectedZone] = useState(null);
@@ -26,7 +27,7 @@ const ZoneWisePlantDetails = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/plant-report/plants-with-last-report",
+          `${apiUrl}/plant-report/plants-with-last-report`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -88,7 +89,7 @@ const ZoneWisePlantDetails = () => {
       }
 
       const response = await axios.delete(
-        `http://localhost:5000/plants/delete-zone-plant?plant_number=${encodeURIComponent(
+        `${apiUrl}/plants/delete-zone-plant?plant_number=${encodeURIComponent(
           plant_number
         )}&zone=${plant_zone}`,
         {
