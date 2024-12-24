@@ -170,7 +170,8 @@ const ZoneWisePlantDetails = () => {
       {selectedZone && (
         <div className="overflow-x-auto">
           <h3 className="text-xl sm:text-2xl font-semibold text-center mb-4 text-indigo-600">
-            Plants in Zone {selectedZone} (झोन क्र. {selectedZone} मधील वृक्ष )
+{/*             Plants in Zone {selectedZone} (झोन क्र. {selectedZone} मधील वृक्ष ) */}
+            झोन क्र. {selectedZone} मधील वृक्ष
           </h3>
           <div className="flex justify-around mb-4 p-4 bg-gray-100 rounded-lg shadow-md">
             <div className="text-gray-700 font-bold">
