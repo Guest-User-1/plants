@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -9,7 +8,9 @@ const DetailedMap = () => {
   const location = useLocation();
   const plant = location.state?.plant; // Get the plant data passed from ZoneWisePlantDetails.jsx
   const [selectedPlant, setSelectedPlant] = useState(null); // State for selected plant (image zoom)
-  const BASE_URL = "http://localhost:5000";
+  // const BASE_URL = "http://localhost:5000";
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  const BASE_URL = apiUrl;
 
   if (!plant) {
     return <div>Plant data not found</div>;
@@ -43,7 +44,7 @@ const DetailedMap = () => {
             <div style={{ textAlign: "center" }}>
               <h4>{plant.plant_name}</h4>
               <img
-                src={`http://localhost:5000${plant.plant_image}`} // Use the correct URL for the image
+                src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image
                 alt={plant.plant_name}
                 style={{
                   width: "100px",
@@ -80,7 +81,7 @@ const DetailedMap = () => {
           {plant.plant_name}
         </h3>
         <img
-          src={`http://localhost:5000${plant.plant_image}`} // Use the correct URL for the image
+          src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image
           alt={plant.plant_name}
           style={{
             width: "100%",
