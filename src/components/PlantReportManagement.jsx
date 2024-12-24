@@ -1,107 +1,9 @@
-// import { useState, useEffect } from "react";
-// import axios from "axios";
-
-// const PlantReportManagement = () => {
-//   const [zones, setZones] = useState([]);
-//   const [healthStatus, setHealthStatus] = useState("");
-//   const [plantReports, setPlantReports] = useState([]);
-//   const [selectedZones, setSelectedZones] = useState([]);
-
-//   const fetchPlantReports = async () => {
-//     try {
-//       const response = await axios.get("http://localhost:5000/plant-report/plant-reports", {
-//         params: {
-//           zones: selectedZones.join(","),
-//           healthStatus,
-//         },
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-//         },
-//       });
-//       setPlantReports(response.data);
-//     } catch (error) {
-//       console.error("Error fetching plant reports:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchPlantReports();
-//   }, [selectedZones, healthStatus]);
-
-//   const handleZoneChange = (zone) => {
-//     setSelectedZones((prev) =>
-//       prev.includes(zone) ? prev.filter((z) => z !== zone) : [...prev, zone]
-//     );
-//   };
-
-//   return (
-//     <div>
-//       <h1>Plant Report Management</h1>
-
-//       <div>
-//         <label>Zones:</label>
-//         <select
-//           multiple
-//           value={selectedZones}
-//           onChange={(e) =>
-//             setSelectedZones([...e.target.selectedOptions].map((o) => o.value))
-//           }
-//         >
-//           {[...Array(50)].map((_, i) => (
-//             <option key={i + 1} value={i + 1}>
-//               Zone {i + 1}
-//             </option>
-//           ))}
-//         </select>
-//       </div>
-
-//       <div>
-//         <label>Health Status:</label>
-//         <select
-//           value={healthStatus}
-//           onChange={(e) => setHealthStatus(e.target.value)}
-//         >
-//           <option value="">All</option>
-//           <option value="Good">Good</option>
-//           <option value="Infected">Infected</option>
-//         </select>
-//       </div>
-
-//       <table>
-//         <thead>
-//           <tr>
-//             <th>Plant Number</th>
-//             <th>Plant Name</th>
-//             <th>Health Status</th>
-//             <th>Report Date</th>
-//             <th>Reported By (Full Name)</th>
-//             <th>Reported By (Phone)</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {plantReports.map((report) => (
-//             <tr key={report.plant_number}>
-//               <td>{report.plant_number}</td>
-//               <td>{report.plant_name}</td>
-//               <td>{report.health_status}</td>
-//               <td>{new Date(report.report_date).toLocaleString()}</td>
-//               <td>{report.reported_by_full_name}</td>
-//               <td>{report.reported_by_phone}</td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default PlantReportManagement;
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 
 const PlantReportManagement = () => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const [selectedZones, setSelectedZones] = useState([]);
   const [healthStatus, setHealthStatus] = useState("");
   const [plantReports, setPlantReports] = useState([]);
@@ -116,18 +18,15 @@ const PlantReportManagement = () => {
       if (!token) {
         throw new Error("No token provided");
       }
-      const response = await axios.get(
-        "http://localhost:5000/plant-report/plant-reports",
-        {
-          params: {
-            zones: selectedZones.join(","),
-            healthStatus,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${apiUrl}/plant-report/plant-reports`, {
+        params: {
+          zones: selectedZones.join(","),
+          healthStatus,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPlantReports(response.data);
     } catch (error) {
       console.error("Error fetching plant reports:", error);
