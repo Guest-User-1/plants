@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const RegisterForm = () => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const [formData, setFormData] = useState({
     full_name: "",
     phone_number: "",
@@ -21,7 +22,7 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/register", formData);
+      await axios.post(`${apiUrl}/register`, formData);
       setSuccess("User registered successfully! Please log in.");
       setError("");
     } catch (err) {
