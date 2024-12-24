@@ -216,6 +216,7 @@ const AllPlantDetails = () => {
   const [zones, setZones] = useState([]); // New state to store available zones
   const [selectedZone, setSelectedZone] = useState(null); // Selected zone
   const [selectedPlant, setSelectedPlant] = useState(null); // Selected plant
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch all plants data and zones
   useEffect(() => {
@@ -225,14 +226,11 @@ const AllPlantDetails = () => {
         if (!token) {
           throw new Error("No token provided");
         }
-        const response = await axios.get(
-          "http://localhost:5000/plants/get-map-plant",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/plants/get-map-plant`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         console.log("Fetched plants:", response.data); // Log response data
         setPlants(response.data);
 
@@ -346,7 +344,7 @@ const AllPlantDetails = () => {
               {selectedPlant.plant_name} Details
             </h3>
             <img
-              src={`http://localhost:5000${selectedPlant.plant_image}`} // Adjust this URL based on your API
+              src={`${apiUrl}${selectedPlant.plant_image}`} // Adjust this URL based on your API
               alt={selectedPlant.plant_name}
               className="w-full h-auto rounded-lg mb-4"
             />
@@ -416,3 +414,4 @@ const AllPlantDetails = () => {
 };
 
 export default AllPlantDetails;
+
