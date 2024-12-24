@@ -145,11 +145,11 @@ const HomePage = () => {
               All Plant Details
             </button>
           </Link>
-          <Link to="/dashboard">
+{/*           <Link to="/dashboard">
             <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl p-4 shadow-lg hover:scale-105 active:scale-90 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-red-300">
               User Management
             </button>
-          </Link>
+          </Link> */}
         </div>
         {/* Map Section */}
         <div className="mt-8 overflow-hidden md:overflow-auto">
