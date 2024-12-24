@@ -9,6 +9,8 @@ const DeletePlant = () => {
   const [plantNumber, setPlantNumber] = useState("");
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -45,7 +47,7 @@ const DeletePlant = () => {
       }
 
       // Send DELETE request to the backend to delete the plant
-      await axios.delete(`http://localhost:5000/plants/delete-plant`, {
+      await axios.delete(`${apiUrl}/plants/delete-plant`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { zone, plant_number: plantNumber },
       });
