@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const RegisterPlant = () => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     plant_name: "",
@@ -42,7 +43,7 @@ const RegisterPlant = () => {
           navigate("/login");
           return;
         }
-        const response = await axios.get("http://localhost:5000/users/me", {
+        const response = await axios.get(`${apiUrl}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserInfo(response.data);
@@ -124,7 +125,7 @@ const RegisterPlant = () => {
         return;
       }
 
-      await axios.post("http://localhost:5000/plants/register-plant", data, {
+      await axios.post(`${apiUrl}/plants/register-plant`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Plant registered successfully!");
