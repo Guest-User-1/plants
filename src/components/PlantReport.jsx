@@ -108,7 +108,8 @@ const PlantReport = () => {
 
     try {
       const response = await axios.get(
-        `plant-report?zone=${plantZone}&number=${plantNumber}`,
+        // `plant-report?zone=${plantZone}&number=${plantNumber}`,
+        `${apiUrl}/plant-report/plants-with-last-report?zone=${plantZone}&number=${plantNumber}`,
         {
           headers: { Authorization: `Bearer ${auth.token}` },
         }
