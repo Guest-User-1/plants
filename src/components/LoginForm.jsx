@@ -9,11 +9,12 @@ const LoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post(`${apiUrl}/login`, {
         phone_number: phoneNumber,
         password,
       });
