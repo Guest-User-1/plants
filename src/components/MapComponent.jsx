@@ -16,7 +16,9 @@ L.Icon.Default.mergeOptions({
 const MapComponent = () => {
   const [plants, setPlants] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState(null); // State for selected plant (image zoom)
-  const BASE_URL = "http://localhost:5000"; // Replace with your backend URL
+  // const BASE_URL = "http://localhost:5000"; // Replace with your backend URL
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+  const BASE_URL = apiUrl;  // Replace with your backend URL
 
   // Fetch plants data from the backend
   useEffect(() => {
