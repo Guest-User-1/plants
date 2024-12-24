@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const UpdatePlant = () => {
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const location = useLocation();
   // const { zone, plantNumber } = location.state || {};
@@ -42,7 +43,7 @@ const UpdatePlant = () => {
           navigate("/login");
           return;
         }
-        const response = await axios.get("http://localhost:5000/users/me", {
+        const response = await axios.get(`${apiUrl}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserInfo(response.data);
@@ -91,13 +92,10 @@ const UpdatePlant = () => {
         return;
       }
 
-      const response = await axios.get(
-        "http://localhost:5000/plants/get-plant",
-        {
-          params: searchParams,
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${apiUrl}/plants/get-plant`, {
+        params: searchParams,
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.data) {
         const formattedData = {
@@ -201,7 +199,7 @@ const UpdatePlant = () => {
         return;
       }
 
-      await axios.put("http://localhost:5000/plants/update-plant", data, {
+      await axios.put(`${apiUrl}/plants/update-plant`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Plant updated successfully!");
