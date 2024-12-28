@@ -94,7 +94,7 @@ const MapComponent = () => {
                     <strong>Plant Number:</strong> {plant.plant_number}
                   </p>
                   <p>
-                    <strong>Zone:</strong> {plant.zone}
+                    <strong>Zone:</strong> {plant.plant_zone}
                   </p>
                   <p>
                     <strong>Health Status:</strong> {plant.health_status}
