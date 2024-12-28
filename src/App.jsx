@@ -15,6 +15,7 @@ import Dashboard from "./components/Dashboard";
 import QuestionsForm from "./components/QuestionsForm";
 import PlantReport from "./components/PlantReport";
 import PlantReportManagement from "./components/PlantReportManagement";
+import NotFoundPage from "./components/NotFoundPage";
 
 function App() {
   const location = useLocation(); // Get the current location
@@ -125,6 +126,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );
