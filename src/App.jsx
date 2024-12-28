@@ -126,7 +126,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<PrivateRoute><NotFoundPage /></PrivateRoute>} />
       </Routes>
     </div>
   );
