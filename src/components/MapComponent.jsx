@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import axios from "axios";
@@ -18,7 +18,7 @@ const MapComponent = () => {
   const [selectedPlant, setSelectedPlant] = useState(null); // State for selected plant (image zoom)
   // const BASE_URL = "http://localhost:5000"; // Replace with your backend URL
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
-  const BASE_URL = apiUrl;  // Replace with your backend URL
+  const BASE_URL = apiUrl; // Replace with your backend URL
 
   // Fetch plants data from the backend
   useEffect(() => {
@@ -79,7 +79,7 @@ const MapComponent = () => {
                 <div style={{ textAlign: "center" }}>
                   <h4 className="font-bold text-xl">{plant.plant_name}</h4>
                   <img
-                    src={`${BASE_URL}${plant.plant_image}`}
+                    src={plant.plant_image}
                     alt={plant.plant_name}
                     style={{
                       // width: "100px",
@@ -136,7 +136,7 @@ const MapComponent = () => {
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <img
-              src={`${BASE_URL}${selectedPlant.plant_image}`}
+              src={selectedPlant.plant_image}
               alt={selectedPlant.plant_name}
               style={{
                 maxWidth: "100%",
