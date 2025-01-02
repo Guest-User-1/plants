@@ -5,6 +5,12 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import "./index.css";
 import App from "./App.jsx";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js");
+  });
+}
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
