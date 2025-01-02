@@ -15,7 +15,7 @@ export default defineConfig({
           "Use this app to track, register, and update information on various plants around you.",
         theme_color: "#ffffff",
         display: "standalone",
-        start_url: "/",
+        start_url: "/login",
         icons: [
           {
             src: "pwa-64x64.png",
