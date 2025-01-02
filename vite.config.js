@@ -8,7 +8,7 @@ export default defineConfig({
     historyApiFallback: true,
   },
   build: {
-    outDir: "build",
+    outDir: "dist",
   },
   // Add this for client-side routing
   resolve: {
