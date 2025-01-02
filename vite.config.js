@@ -11,9 +11,17 @@ export default defineConfig({
       manifest: {
         name: "Plant App",
         short_name: "App",
-        description: "Your app description",
+        description:
+          "Use this app to track, register, and update information on various plants around you.",
         theme_color: "#ffffff",
+        display: "standalone",
+        start_url: "/",
         icons: [
+          {
+            src: "pwa-64x64.png",
+            sizes: "64x64",
+            type: "image/png",
+          },
           {
             src: "pwa-192x192.png",
             sizes: "192x192",
