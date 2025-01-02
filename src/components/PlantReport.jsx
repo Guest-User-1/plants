@@ -291,13 +291,16 @@ const PlantReport = () => {
 
       {showRecords && records.length > 0 && (
         <div className="relative overflow-x-auto border rounded-lg p-4 mb-12">
+          <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold mb-4">पूर्व तपशिलांची नोंद</h3>
           <button
             onClick={handleCloseRecords}
             className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
           >
             Close
           </button>
-          <h3 className="text-xl font-bold mb-4">पूर्व तपशिलांची नोंद</h3>
+          </div>
+          <div className="overflow-x-auto">
           <table className="table-auto w-full text-left border-collapse">
             <thead>
               {/* <tr className="bg-purple-400">
@@ -533,6 +536,7 @@ const PlantReport = () => {
               ))}
             </tbody>
           </table>
+            </div>
         </div>
       )}
 
