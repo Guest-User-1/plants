@@ -254,7 +254,8 @@ const UpdatePlant = () => {
 
       // Append all form data fields
       Object.keys(formData).forEach((key) => {
-        if (formData[key] !== null && formData[key] !== undefined) {
+        if (formData[key] !== null && formData[key] !== undefined &&
+          key !== "plant_image") {
           formDataToSend.append(key, formData[key]);
         }
       });
