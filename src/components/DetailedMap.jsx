@@ -2,16 +2,38 @@ import { useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const DetailedMap = () => {
   const location = useLocation();
   const plant = location.state?.plant; // Get the plant data passed from ZoneWisePlantDetails.jsx
   const [selectedPlant, setSelectedPlant] = useState(null); // State for selected plant (image zoom)
-  // const BASE_URL = "http://localhost:5000";
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
-  const BASE_URL = apiUrl;
+  const [imageUrl, setImageUrl] = useState(null);
+  
 
+  useEffect(() => {
+    if (plant?.plant_image?.data) {
+      // If we receive Buffer data, convert it to base64
+      const uint8Array = new Uint8Array(plant.plant_image.data);
+      const binaryString = uint8Array.reduce(
+        (str, byte) => str + String.fromCharCode(byte),
+        ""
+      );
+      const base64String = btoa(binaryString);
+
+      // Detect if it's PNG based on the header bytes
+      const isPNG = uint8Array[0] === 137 && uint8Array[1] === 80;
+      const mimeType = isPNG ? "image/png" : "image/jpeg";
+
+      setImageUrl(`data:${mimeType};base64,${base64String}`);
+    } else if (
+      typeof plant?.plant_image === "string" &&
+      plant.plant_image.startsWith("data:")
+    ) {
+      // If we already have a data URL, use it directly
+      setImageUrl(plant.plant_image);
+    }
+  }, [plant]);
   if (!plant) {
     return <div>Plant data not found</div>;
   }
@@ -24,6 +46,26 @@ const DetailedMap = () => {
   // Function to close the modal
   const closeModal = () => {
     setSelectedPlant(null); // Close the modal by setting selectedPlant to null
+  };
+
+  const handleImageError = (e) => {
+    console.error("Image failed to load:", e);
+    e.target.style.display = "none";
+  };
+
+  // Only render image if we have a valid URL
+  const renderImage = (style) => {
+    if (!imageUrl) return null;
+
+    return (
+      <img
+        src={imageUrl}
+        alt={plant.plant_name}
+        style={style}
+        onError={handleImageError}
+        onClick={() => handleImageClick(plant)}
+      />
+    );
   };
 
   return (
@@ -43,17 +85,12 @@ const DetailedMap = () => {
           <Popup>
             <div style={{ textAlign: "center" }}>
               <h4>{plant.plant_name}</h4>
-              <img
-                src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image
-                alt={plant.plant_name}
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleImageClick(plant)}
-              />
+              {renderImage({
+                width: "100px",
+                height: "100px",
+                borderRadius: "5px",
+                cursor: "pointer",
+              })}
               <p>
                 <strong>Plant Number:</strong> {plant.plant_number}
               </p>
@@ -80,18 +117,12 @@ const DetailedMap = () => {
         <h3 className="font-bold text-center text-xl mb-4 ">
           {plant.plant_name}
         </h3>
-        <img
-          src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image
-          alt={plant.plant_name}
-          style={{
-            width: "100%",
-            height: "auto",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          onClick={() => handleImageClick(plant)}
-          className="mb-4"
-        />
+        {renderImage({
+          width: "100px",
+          height: "100px",
+          borderRadius: "5px",
+          cursor: "pointer",
+        })}
         <p>
           <strong>Plant Number:</strong> {plant.plant_number}
         </p>
@@ -146,16 +177,12 @@ const DetailedMap = () => {
             }}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
-            <img
-              src={`${BASE_URL}${selectedPlant.plant_image}`}
-              alt={selectedPlant.plant_name}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "80vh",
-                borderRadius: "5px",
-                cursor: "zoom-out",
-              }}
-            />
+            {renderImage({
+              maxWidth: "100%",
+              maxHeight: "80vh",
+              borderRadius: "5px",
+              cursor: "zoom-out",
+            })}
             <h4 style={{ color: "white", marginTop: "10px" }}>
               {selectedPlant.plant_name}
             </h4>
