@@ -44,7 +44,7 @@ const DetailedMap = () => {
             <div style={{ textAlign: "center" }}>
               <h4>{plant.plant_name}</h4>
               <img
-{/*                 src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image */}
+                src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image
                 alt={plant.plant_name}
                 style={{
                   width: "100px",
@@ -81,7 +81,7 @@ const DetailedMap = () => {
           {plant.plant_name}
         </h3>
         <img
-{/*           src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image */}
+          src={`${BASE_URL}${plant.plant_image}`} // Use the correct URL for the image
           alt={plant.plant_name}
           style={{
             width: "100%",
@@ -147,7 +147,7 @@ const DetailedMap = () => {
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <img
-{/*               src={`${BASE_URL}${selectedPlant.plant_image}`} */}
+              src={`${BASE_URL}${selectedPlant.plant_image}`}
               alt={selectedPlant.plant_name}
               style={{
                 maxWidth: "100%",
