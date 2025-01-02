@@ -3,6 +3,7 @@ self.addEventListener('install', (event) => {
     caches.open('v1').then((cache) => {
       return cache.addAll([
         '/',
+        '/login',
         '/index.html',
         '/manifest.json'
       ]);
