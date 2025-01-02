@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -189,7 +189,15 @@ const UpdatePlant = () => {
       vibhaag: userInfo.vibhaag,
     };
     data.append("updated_by", JSON.stringify(updatedBy)); // Send as JSON string
-    if (plantImage) data.append("plant_image", plantImage);
+    // if (plantImage) data.append("plant_image", plantImage);
+    if (plantImage) {
+      // Check if plantImage is Base64 encoded
+      if (typeof plantImage === "string" && plantImage.startsWith("data:")) {
+        data.append("plant_image", plantImage);
+      } else {
+        data.append("plant_image", plantImage);
+      }
+    }
 
     try {
       const token = localStorage.getItem("authToken");
