@@ -154,6 +154,75 @@ const UpdatePlant = () => {
   const handleModalClose = () => {
     setIsModalOpen(false); // Close the modal
   };
+  // const handleUpdate = async (e) => {
+  //   e.preventDefault();
+  //   if (!formData) {
+  //     toast.error("Please fetch plant data before updating.");
+  //     return;
+  //   }
+
+  //   // Restrict `zonal-admin` users to update plants within their zone
+  //   if (
+  //     userInfo.role === "zonal-admin" &&
+  //     formData.plant_zone !== userInfo.zone
+  //   ) {
+  //     toast.error("You can only update plants from your assigned zone.");
+  //     toast.error(
+  //       "तुम्ही फक्त तुमच्या विभागातील वृक्षांची माहिती अद्ययावत करू शकता."
+  //     );
+  //     return;
+  //   }
+  //   const processedFormData = { ...formData };
+
+  //   const data = new FormData();
+  //   Object.keys(processedFormData).forEach((key) =>
+  //     data.append(key, processedFormData[key])
+  //   );
+
+  //   // data.append("updated_by_full_name", userInfo.full_name);
+  //   // data.append("updated_by_zone", userInfo.zone);
+  //   // data.append("updated_by_vibhaag", userInfo.vibhaag);
+  //   // Combine `updated_by` fields into a single object
+  //   const updatedBy = {
+  //     full_name: userInfo.full_name,
+  //     zone: userInfo.zone,
+  //     vibhaag: userInfo.vibhaag,
+  //   };
+  //   data.append("updated_by", JSON.stringify(updatedBy)); // Send as JSON string
+  //   // if (plantImage) data.append("plant_image", plantImage);
+  //   if (plantImage) {
+  //     // Check if plantImage is Base64 encoded
+  //     if (typeof plantImage === "string" && plantImage.startsWith("data:")) {
+  //       data.append("plant_image", plantImage);
+  //     } else {
+  //       data.append("plant_image", plantImage);
+  //     }
+  //   }
+
+  //   try {
+  //     const token = localStorage.getItem("authToken");
+  //     if (!token) {
+  //       toast.error("You need to be logged in to update the plant.");
+  //       navigate("/login");
+  //       return;
+  //     }
+
+  //     await axios.put(`${apiUrl}/plants/update-plant`, data, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     toast.success("Plant updated successfully!");
+  //     toast.success("माहिती अद्ययावत झाली आहे!");
+
+  //     setFormData(null);
+  //     setPlantImage(null);
+  //     handleModalClose();
+  //   } catch (error) {
+  //     toast.error("Error updating plant.");
+  //     console.error("Update error:", error);
+  //   }
+  // };
+  // Update the handleUpdate function in UpdatePlant.jsx
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (!formData) {
@@ -161,7 +230,7 @@ const UpdatePlant = () => {
       return;
     }
 
-    // Restrict `zonal-admin` users to update plants within their zone
+    // Restrict zonal-admin users to update plants within their zone
     if (
       userInfo.role === "zonal-admin" &&
       formData.plant_zone !== userInfo.zone
@@ -172,32 +241,6 @@ const UpdatePlant = () => {
       );
       return;
     }
-    const processedFormData = { ...formData };
-
-    const data = new FormData();
-    Object.keys(processedFormData).forEach((key) =>
-      data.append(key, processedFormData[key])
-    );
-
-    // data.append("updated_by_full_name", userInfo.full_name);
-    // data.append("updated_by_zone", userInfo.zone);
-    // data.append("updated_by_vibhaag", userInfo.vibhaag);
-    // Combine `updated_by` fields into a single object
-    const updatedBy = {
-      full_name: userInfo.full_name,
-      zone: userInfo.zone,
-      vibhaag: userInfo.vibhaag,
-    };
-    data.append("updated_by", JSON.stringify(updatedBy)); // Send as JSON string
-    // if (plantImage) data.append("plant_image", plantImage);
-    if (plantImage) {
-      // Check if plantImage is Base64 encoded
-      if (typeof plantImage === "string" && plantImage.startsWith("data:")) {
-        data.append("plant_image", plantImage);
-      } else {
-        data.append("plant_image", plantImage);
-      }
-    }
 
     try {
       const token = localStorage.getItem("authToken");
@@ -207,21 +250,57 @@ const UpdatePlant = () => {
         return;
       }
 
-      await axios.put(`${apiUrl}/plants/update-plant`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      toast.success("Plant updated successfully!");
-      toast.success("माहिती अद्ययावत झाली आहे!");
+      const formDataToSend = new FormData();
 
-      setFormData(null);
-      setPlantImage(null);
-      handleModalClose();
+      // Append all form data fields
+      Object.keys(formData).forEach((key) => {
+        if (formData[key] !== null && formData[key] !== undefined) {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      // Append updated_by information
+      const updatedBy = {
+        full_name: userInfo.full_name,
+        zone: userInfo.zone,
+        vibhaag: userInfo.vibhaag,
+      };
+      formDataToSend.append("updated_by", JSON.stringify(updatedBy));
+
+      // Handle image upload
+      if (plantImage) {
+        if (typeof plantImage === "string" && plantImage.startsWith("data:")) {
+          // If it's a base64 string
+          formDataToSend.append("plant_image", plantImage);
+        } else {
+          // If it's a File object
+          formDataToSend.append("plant_image", plantImage);
+        }
+      }
+
+      const response = await axios.put(
+        `${apiUrl}/plants/update-plant`,
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Plant updated successfully!");
+        toast.success("माहिती अद्ययावत झाली आहे!");
+        setFormData(null);
+        setPlantImage(null);
+        handleModalClose();
+      }
     } catch (error) {
-      toast.error("Error updating plant.");
       console.error("Update error:", error);
+      toast.error(error.response?.data?.message || "Error updating plant.");
     }
   };
-
   return (
     <div className="update-plant p-4 sm:p-6 lg:p-8">
       <ToastContainer />
