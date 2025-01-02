@@ -170,55 +170,61 @@ const ZoneWisePlantDetails = () => {
       {selectedZone && (
         <div className="overflow-x-auto">
           <h3 className="text-xl sm:text-2xl font-semibold text-center mb-4 text-indigo-600">
-{/*             Plants in Zone {selectedZone} (झोन क्र. {selectedZone} मधील वृक्ष ) */}
+            {/* Plants in Zone {selectedZone} (झोन क्र. {selectedZone} मधील वृक्ष) */}
             झोन क्र. {selectedZone} मधील वृक्ष
           </h3>
-          <div className="flex justify-around mb-4 p-4 bg-gray-100 rounded-lg shadow-md">
-            <div className="text-gray-700 font-bold">
-              एकूण वृक्ष : {zoneData[selectedZone].length}
-              {/* Total Plants: {zoneData[selectedZone].length} */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+              <div className="text-gray-700 font-bold">
+                एकूण वृक्ष : {zoneData[selectedZone].length}
+              </div>
             </div>
-            <div className="text-red-600 font-bold">
-              बाधित वृक्ष : {/* Infected Plants:{" "} */}
-              {
-                zoneData[selectedZone].filter(
-                  (plant) => plant.health_status === "Infected"
-                ).length
-              }
+            <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+              <div className="text-red-600 font-bold">
+                बाधित वृक्ष :{" "}
+                {
+                  zoneData[selectedZone].filter(
+                    (plant) => plant.health_status === "Infected"
+                  ).length
+                }
+              </div>
             </div>
-            <div className="text-green-600 font-bold">
-              सुस्थितीत वृक्ष : {/* Healthy Plants:{" "} */}
-              {
-                zoneData[selectedZone].filter(
-                  (plant) => plant.health_status !== "Infected"
-                ).length
-              }
+            <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+              <div className="text-green-600 font-bold">
+                सुस्थितीत वृक्ष :{" "}
+                {
+                  zoneData[selectedZone].filter(
+                    (plant) => plant.health_status !== "Infected"
+                  ).length
+                }
+              </div>
             </div>
           </div>
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md text-center">
-            <thead className="bg-indigo-200">
-              <tr>
-                <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
-                  {/* Plant No. (क्र.) */}
-                  वृक्ष क्र.
-                </th>
-                <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
-                  {/* Plant Name (नाव) */}
-                  वृक्षाचे नाव
-                </th>
-                <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
-                  {/* Health (स्थिति) */}
-                  स्थिति
-                </th>
-                <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
-                  {/* Last Report Date (शेवटचा तपशील) */}
-                  शेवटच्या तपशीलची दिनांक
-                </th>
-                <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
-                  {/* Last Report Time (शेवटच्या तपशीलचा वेळ) */}
-                  शेवटच्या तपशीलचा वेळ
-                </th>
-                {/* {(user &&
+          <div className="w-full overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md text-center">
+              <thead className="bg-indigo-200">
+                <tr>
+                  <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
+                    {/* Plant No. (क्र.) */}
+                    वृक्ष क्र.
+                  </th>
+                  <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
+                    {/* Plant Name (नाव) */}
+                    वृक्षाचे नाव
+                  </th>
+                  <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
+                    {/* Health (स्थिति) */}
+                    स्थिति
+                  </th>
+                  <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
+                    {/* Last Report Date (शेवटचा तपशील) */}
+                    शेवटच्या तपशीलची दिनांक
+                  </th>
+                  <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
+                    {/* Last Report Time (शेवटच्या तपशीलचा वेळ) */}
+                    शेवटच्या तपशीलचा वेळ
+                  </th>
+                  {/* {(user &&
                   user.role === "zonal-admin" &&
                   user.zone === selectedZone) ||
                 user.role === "super-admin" ? (
@@ -226,84 +232,86 @@ const ZoneWisePlantDetails = () => {
                     क्रिया
                   </th>
                 ) : null} */}
-                {(user && user.role === "zonal-admin") ||
-                user.role === "super-admin" ? (
-                  <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
-                    {/* Action (क्रिया) */}
-                    क्रिया
-                  </th>
-                ) : null}
-              </tr>
-            </thead>
-
-            <tbody>
-              {zoneData[selectedZone].map((plant) => (
-                <tr
-                  key={plant.id}
-                  className={`border-b border-gray-200 ${
-                    plant.health_status === "Infected" ? "bg-red-400" : ""
-                  }`}
-                >
-                  <td
-                    className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 cursor-pointer underline"
-                    onClick={() => handlePlantClick(plant)}
-                  >
-                    {plant.plant_number}
-                  </td>
-                  <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                    {plant.plant_name}
-                  </td>
-                  <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                    {plant.health_status === "Good" ? "सुस्थितीत" : "बाधित"}
-                  </td>
-                  <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                    {plant.last_reported_date
-                      ? new Date(plant.last_reported_date).toLocaleDateString(
-                          "en-GB"
-                        )
-                      : "Not Reported"}
-                  </td>
-                  <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                    {plant.last_reported_date
-                      ? new Date(plant.last_reported_date).toLocaleTimeString()
-                      : "Not Reported"}
-                  </td>
-                  {(user &&
-                    user.role === "zonal-admin" &&
-                    user.zone === plant.plant_zone) ||
+                  {(user && user.role === "zonal-admin") ||
                   user.role === "super-admin" ? (
-                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 flex items-center gap-3">
-                      <button
-                        onClick={() =>
-                          handleEdit(plant.plant_zone, plant.plant_number)
-                        }
-                        className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
-                      >
-                        <FaEdit size={20} />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleForm(plant.plant_zone, plant.plant_number)
-                        }
-                        className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
-                      >
-                        <FaWpforms size={20} />
-                      </button>
-                      {user && user.role !== "zonal-admin" && (
+                    <th className="py-3 px-4 text-center text-sm sm:text-base font-extrabold text-gray-700">
+                      {/* Action (क्रिया) */}
+                      क्रिया
+                    </th>
+                  ) : null}
+                </tr>
+              </thead>
+
+              <tbody>
+                {zoneData[selectedZone].map((plant) => (
+                  <tr
+                    key={plant.id}
+                    className={`border-b border-gray-200 ${
+                      plant.health_status === "Infected" ? "bg-red-400" : ""
+                    }`}
+                  >
+                    <td
+                      className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 cursor-pointer underline"
+                      onClick={() => handlePlantClick(plant)}
+                    >
+                      {plant.plant_number}
+                    </td>
+                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                      {plant.plant_name}
+                    </td>
+                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                      {plant.health_status === "Good" ? "सुस्थितीत" : "बाधित"}
+                    </td>
+                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                      {plant.last_reported_date
+                        ? new Date(plant.last_reported_date).toLocaleDateString(
+                            "en-GB"
+                          )
+                        : "Not Reported"}
+                    </td>
+                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                      {plant.last_reported_date
+                        ? new Date(
+                            plant.last_reported_date
+                          ).toLocaleTimeString()
+                        : "Not Reported"}
+                    </td>
+                    {(user &&
+                      user.role === "zonal-admin" &&
+                      user.zone === plant.plant_zone) ||
+                    user.role === "super-admin" ? (
+                      <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 flex items-center gap-3">
                         <button
                           onClick={() =>
-                            handleDelete(
-                              plant.id,
-                              plant.plant_zone,
-                              plant.plant_number
-                            )
+                            handleEdit(plant.plant_zone, plant.plant_number)
                           }
-                          className="text-red-500 hover:text-red-700 transition duration-300 active:scale-90"
+                          className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
                         >
-                          <FaTrashAlt size={20} />
+                          <FaEdit size={20} />
                         </button>
-                      )}
-                      {/* <button
+                        <button
+                          onClick={() =>
+                            handleForm(plant.plant_zone, plant.plant_number)
+                          }
+                          className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
+                        >
+                          <FaWpforms size={20} />
+                        </button>
+                        {user && user.role !== "zonal-admin" && (
+                          <button
+                            onClick={() =>
+                              handleDelete(
+                                plant.id,
+                                plant.plant_zone,
+                                plant.plant_number
+                              )
+                            }
+                            className="text-red-500 hover:text-red-700 transition duration-300 active:scale-90"
+                          >
+                            <FaTrashAlt size={20} />
+                          </button>
+                        )}
+                        {/* <button
                         onClick={() =>
                           handleDelete(
                             plant.id,
@@ -315,12 +323,13 @@ const ZoneWisePlantDetails = () => {
                       >
                         <FaTrashAlt size={20} />
                       </button> */}
-                    </td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      </td>
+                    ) : null}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <button
             onClick={() => setSelectedZone(null)}
             className="mt-4 px-4 py-2 font-bold bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 active:scale-90"
