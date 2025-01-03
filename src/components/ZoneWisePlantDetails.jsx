@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "react-toastify/dist/ReactToastify.css";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const ZoneWisePlantDetails = () => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -11,6 +12,8 @@ const ZoneWisePlantDetails = () => {
   const [loading, setLoading] = useState(true);
   const [selectedZone, setSelectedZone] = useState(null);
   const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [plantToDelete, setPlantToDelete] = useState(null);
 
   // Fetch plants data by zone
   useEffect(() => {
@@ -81,7 +84,48 @@ const ZoneWisePlantDetails = () => {
     navigate(`/plant-report?zone=${plant_zone}&plantNumber=${plantNumber}`);
   };
 
-  const handleDelete = async (plantId, plant_zone, plant_number) => {
+  // const handleDelete = async (plantId, plant_zone, plant_number) => {
+  //   try {
+  //     const token = localStorage.getItem("authToken");
+  //     if (!token) {
+  //       throw new Error("No token provided");
+  //     }
+
+  //     const response = await axios.delete(
+  //       `${apiUrl}/plants/delete-zone-plant?plant_number=${encodeURIComponent(
+  //         plant_number
+  //       )}&zone=${plant_zone}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       toast.success("Plant deleted successfully!");
+  //       setZoneData((prevZoneData) => {
+  //         const updatedZoneData = { ...prevZoneData };
+  //         updatedZoneData[plant_zone] = updatedZoneData[plant_zone].filter(
+  //           (plant) => plant.plant_number !== plant_number
+  //         );
+  //         return updatedZoneData;
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error deleting plant.");
+  //     console.error("Error deleting plant:", error);
+  //   }
+  // };
+
+  const handleDeleteClick = (plant) => {
+    setPlantToDelete(plant);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!plantToDelete) return;
+
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
@@ -90,8 +134,8 @@ const ZoneWisePlantDetails = () => {
 
       const response = await axios.delete(
         `${apiUrl}/plants/delete-zone-plant?plant_number=${encodeURIComponent(
-          plant_number
-        )}&zone=${plant_zone}`,
+          plantToDelete.plant_number
+        )}&zone=${plantToDelete.plant_zone}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -103,8 +147,10 @@ const ZoneWisePlantDetails = () => {
         toast.success("Plant deleted successfully!");
         setZoneData((prevZoneData) => {
           const updatedZoneData = { ...prevZoneData };
-          updatedZoneData[plant_zone] = updatedZoneData[plant_zone].filter(
-            (plant) => plant.plant_number !== plant_number
+          updatedZoneData[plantToDelete.plant_zone] = updatedZoneData[
+            plantToDelete.plant_zone
+          ].filter(
+            (plant) => plant.plant_number !== plantToDelete.plant_number
           );
           return updatedZoneData;
         });
@@ -112,9 +158,11 @@ const ZoneWisePlantDetails = () => {
     } catch (error) {
       toast.error("Error deleting plant.");
       console.error("Error deleting plant:", error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setPlantToDelete(null);
     }
   };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -243,75 +291,71 @@ const ZoneWisePlantDetails = () => {
               </thead>
 
               <tbody>
-                {zoneData[selectedZone].sort((a, b) => a.plant_number - b.plant_number).map((plant) => (
-                  <tr
-                    key={plant.id}
-                    className={`border-b border-gray-200 ${
-                      plant.health_status === "Infected" ? "bg-red-400" : ""
-                    }`}
-                  >
-                    <td
-                      className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 cursor-pointer underline"
-                      onClick={() => handlePlantClick(plant)}
+                {zoneData[selectedZone]
+                  .sort((a, b) => a.plant_number - b.plant_number)
+                  .map((plant) => (
+                    <tr
+                      key={plant.id}
+                      className={`border-b border-gray-200 ${
+                        plant.health_status === "Infected" ? "bg-red-400" : ""
+                      }`}
                     >
-                      {plant.plant_number}
-                    </td>
-                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                      {plant.plant_name}
-                    </td>
-                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                      {plant.health_status === "Good" ? "सुस्थितीत" : "बाधित"}
-                    </td>
-                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                      {plant.last_reported_date
-                        ? new Date(plant.last_reported_date).toLocaleDateString(
-                            "en-GB"
-                          )
-                        : "Not Reported"}
-                    </td>
-                    <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
-                      {plant.last_reported_date
-                        ? new Date(
-                            plant.last_reported_date
-                          ).toLocaleTimeString()
-                        : "Not Reported"}
-                    </td>
-                    {(user &&
-                      user.role === "zonal-admin" &&
-                      user.zone === plant.plant_zone) ||
-                    user.role === "super-admin" ? (
-                      <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 flex items-center gap-3">
-                        <button
-                          onClick={() =>
-                            handleEdit(plant.plant_zone, plant.plant_number)
-                          }
-                          className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
-                        >
-                          <FaEdit size={20} />
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleForm(plant.plant_zone, plant.plant_number)
-                          }
-                          className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
-                        >
-                          <FaWpforms size={20} />
-                        </button>
-                        {user && user.role !== "zonal-admin" && (
+                      <td
+                        className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 cursor-pointer underline"
+                        onClick={() => handlePlantClick(plant)}
+                      >
+                        {plant.plant_number}
+                      </td>
+                      <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                        {plant.plant_name}
+                      </td>
+                      <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                        {plant.health_status === "Good" ? "सुस्थितीत" : "बाधित"}
+                      </td>
+                      <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                        {plant.last_reported_date
+                          ? new Date(
+                              plant.last_reported_date
+                            ).toLocaleDateString("en-GB")
+                          : "Not Reported"}
+                      </td>
+                      <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700">
+                        {plant.last_reported_date
+                          ? new Date(
+                              plant.last_reported_date
+                            ).toLocaleTimeString()
+                          : "Not Reported"}
+                      </td>
+                      {(user &&
+                        user.role === "zonal-admin" &&
+                        user.zone === plant.plant_zone) ||
+                      user.role === "super-admin" ? (
+                        <td className="py-2 px-4 font-bold text-sm sm:text-base text-gray-700 flex items-center gap-3">
                           <button
                             onClick={() =>
-                              handleDelete(
-                                plant.id,
-                                plant.plant_zone,
-                                plant.plant_number
-                              )
+                              handleEdit(plant.plant_zone, plant.plant_number)
                             }
-                            className="text-red-500 hover:text-red-700 transition duration-300 active:scale-90"
+                            className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
                           >
-                            <FaTrashAlt size={20} />
+                            <FaEdit size={20} />
                           </button>
-                        )}
-                        {/* <button
+                          <button
+                            onClick={() =>
+                              handleForm(plant.plant_zone, plant.plant_number)
+                            }
+                            className="text-green-500 hover:text-green-700 transition duration-300 active:scale-90"
+                          >
+                            <FaWpforms size={20} />
+                          </button>
+                          {user && user.role !== "zonal-admin" && (
+                            <button
+                              onClick={() => handleDeleteClick(plant)}
+                              className="text-red-500 hover:text-red-700 transition duration-300 active:scale-90"
+                            >
+                              <FaTrashAlt size={20} />
+                            </button>
+                          )}
+                          {/* <button
                         onClick={() =>
                           handleDelete(
                             plant.id,
@@ -323,10 +367,10 @@ const ZoneWisePlantDetails = () => {
                       >
                         <FaTrashAlt size={20} />
                       </button> */}
-                      </td>
-                    ) : null}
-                  </tr>
-                ))}
+                        </td>
+                      ) : null}
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -338,6 +382,14 @@ const ZoneWisePlantDetails = () => {
           </button>
         </div>
       )}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setPlantToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 };
