@@ -243,7 +243,7 @@ const ZoneWisePlantDetails = () => {
               </thead>
 
               <tbody>
-                {zoneData[selectedZone].map((plant) => (
+                {zoneData[selectedZone].sort((a, b) => a.plant_number - b.plant_number).map((plant) => (
                   <tr
                     key={plant.id}
                     className={`border-b border-gray-200 ${
