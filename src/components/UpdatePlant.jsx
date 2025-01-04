@@ -254,8 +254,11 @@ const UpdatePlant = () => {
 
       // Append all form data fields
       Object.keys(formData).forEach((key) => {
-        if (formData[key] !== null && formData[key] !== undefined &&
-          key !== "plant_image") {
+        if (
+          formData[key] !== null &&
+          formData[key] !== undefined &&
+          key !== "plant_image"
+        ) {
           formDataToSend.append(key, formData[key]);
         }
       });
@@ -394,7 +397,145 @@ const UpdatePlant = () => {
                   required
                 />
               </label>
-              <label className="block text-sm sm:text-base">
+              <label className="block">
+                Height (ft.) (उंची फूटमध्ये):
+                <div className="flex gap-2">
+                  <select
+                    name="heightFeet"
+                    value={Math.floor(formData.height)}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        height:
+                          parseFloat(e.target.value) +
+                          parseFloat(formData.height % 1 || 0),
+                      }))
+                    }
+                    className="p-2 border rounded w-full"
+                    required
+                  >
+                    {Array.from({ length: 101 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    name="heightInches"
+                    value={(formData.height % 1).toFixed(1)}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        height:
+                          Math.floor(formData.height) +
+                          parseFloat(e.target.value),
+                      }))
+                    }
+                    className="p-2 border rounded w-full"
+                    required
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <option key={i} value={i / 10}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </label>
+
+              <label className="block">
+                Girth (ft.) (घेरा फूटमध्ये):
+                <div className="flex gap-2">
+                  <select
+                    name="girthFeet"
+                    value={Math.floor(formData.girth)}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        girth:
+                          parseFloat(e.target.value) +
+                          parseFloat(formData.girth % 1 || 0),
+                      }))
+                    }
+                    className="p-2 border rounded w-full"
+                    required
+                  >
+                    {Array.from({ length: 101 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    name="girthInches"
+                    value={(formData.girth % 1).toFixed(1)}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        girth:
+                          Math.floor(formData.girth) +
+                          parseFloat(e.target.value),
+                      }))
+                    }
+                    className="p-2 border rounded w-full"
+                    required
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <option key={i} value={i / 10}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </label>
+
+              <label className="block">
+                Stump (cm.) (बुंधा सें.मी.मध्ये):
+                <div className="flex gap-2">
+                  <select
+                    name="stumpCmWhole"
+                    value={Math.floor(formData.stump)}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        stump:
+                          parseFloat(e.target.value) +
+                          parseFloat(formData.stump % 1 || 0),
+                      }))
+                    }
+                    className="p-2 border rounded w-full"
+                    required
+                  >
+                    {Array.from({ length: 101 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    name="stumpCmFraction"
+                    value={(formData.stump % 1).toFixed(1)}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        stump:
+                          Math.floor(formData.stump) +
+                          parseFloat(e.target.value),
+                      }))
+                    }
+                    className="p-2 border rounded w-full"
+                    required
+                  >
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <option key={i} value={i / 10}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </label>
+
+              {/* <label className="block text-sm sm:text-base">
                 Height (ft.) (उंची फूटमध्ये):
                 <input
                   type="number"
@@ -429,7 +570,7 @@ const UpdatePlant = () => {
                   className="p-2 border rounded w-full"
                   required
                 />
-              </label>
+              </label> */}
               <label className="block text-sm sm:text-base">
                 Planted On (वृक्ष रोपण दिनांक)
                 <input
